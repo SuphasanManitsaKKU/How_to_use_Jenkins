@@ -18,6 +18,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 // Install Go dependencies
+                git 'https://github.com/SuphasanManitsaKKU/temp.git'
                 sh 'go mod tidy'
             }
         }
