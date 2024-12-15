@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"test/pkg" // Import the pkg package
+	"test/pkg"
 )
 
 func main() {
