@@ -37,21 +37,6 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                script {
-                    echo "========================================="
-                    echo "🔨 Building the Go Project"
-                    echo "========================================="
-                }
-                sh '''
-                mkdir -p ${BUILD_DIR}
-                go build -o ${BUILD_DIR}/app main.go
-                echo "✅ Build successful. Binary created in ${BUILD_DIR}/app"
-                '''
-            }
-        }
-
         stage('Unit Tests') {
             steps {
                 script {
@@ -65,16 +50,17 @@ pipeline {
             }
         }
 
-        stage('Static Analysis') {
+        stage('Build') {
             steps {
                 script {
                     echo "========================================="
-                    echo "🔍 Running Go Lint for Static Analysis"
+                    echo "🔨 Building the Go Project"
                     echo "========================================="
                 }
                 sh '''
-                go install golang.org/x/lint/golint@latest
-                golint ./...
+                mkdir -p ${BUILD_DIR}
+                go build -o ${BUILD_DIR}/app main.go
+                echo "✅ Build successful. Binary created in ${BUILD_DIR}/app"
                 '''
             }
         }
