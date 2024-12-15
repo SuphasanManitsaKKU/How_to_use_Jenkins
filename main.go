@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"test/pkg" // Import the pkg package
+)
 
 func main() {
-	fmt.Println("Hello, Worlda!")
+	result := pkg.Add(1, 2)
+	fmt.Println("Result:", result)
 }
