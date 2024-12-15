@@ -8,6 +8,7 @@ pipeline {
     }
 
     stages {
+
         stage('Initialize') {
             steps {
                 script {
@@ -24,6 +25,11 @@ pipeline {
 
         stage('Dependencies') {
             steps {
+                script {
+                    echo "========================================="
+                    echo "📦 Installing Go Module Dependencies"
+                    echo "========================================="
+                }
                 sh '''
                 go mod tidy
                 go mod download
@@ -33,19 +39,69 @@ pipeline {
 
         stage('Build') {
             steps {
+                script {
+                    echo "========================================="
+                    echo "🔨 Building the Go Project"
+                    echo "========================================="
+                }
                 sh '''
                 mkdir -p ${BUILD_DIR}
                 go build -o ${BUILD_DIR}/app main.go
+                echo "✅ Build successful. Binary created in ${BUILD_DIR}/app"
+                '''
+            }
+        }
+
+        stage('Unit Tests') {
+            steps {
+                script {
+                    echo "========================================="
+                    echo "✅ Running Unit Tests"
+                    echo "========================================="
+                }
+                sh '''
+                go test ./tests/... -v
+                '''
+            }
+        }
+
+        stage('Static Analysis') {
+            steps {
+                script {
+                    echo "========================================="
+                    echo "🔍 Running Go Lint for Static Analysis"
+                    echo "========================================="
+                }
+                sh '''
+                go install golang.org/x/lint/golint@latest
+                golint ./...
+                '''
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    echo "========================================="
+                    echo "🚀 Deploying the Application"
+                    echo "========================================="
+                }
+                sh '''
+                echo "Simulating deployment of ${BUILD_DIR}/app"
                 '''
             }
         }
     }
+
     post {
         success {
-            echo "✅ Build Successful!"
+            echo "🎉 Build, Test, and Deployment Successful!"
         }
         failure {
-            echo "❌ Build Failed! Check Logs."
+            echo "❌ Build or Tests Failed! Check Logs for Details."
+        }
+        always {
+            echo "🔔 Pipeline Completed."
         }
     }
 }
